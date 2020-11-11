@@ -1,60 +1,60 @@
-    void dijikstra(int[][] maze, int x, int y, int dx, int dy, int[][] dist, boolean isAStar){
-        
-        PriorityQueue<int[]> queue ;
-        
-        if(isAStar)
-            queue = new PriorityQueue<>((a, b) -> (a[2] - b[2]));
-        else
-            queue = new PriorityQueue<>((a, b) -> Integer.compare(a[2], b[2]));
-        
-        queue.add(new int[]{x,y,1});
-        
-        
-        while(!queue.isEmpty()){
-            
-            int[] node = queue.poll();
-            int sx = node[0];
-            int sy = node[1];
-            int diff = node[2];
 ​
-            if(sx == dx && sy == dy){
-                System.out.println(dist[sx][sy]);
-                return;
-            }
-​
-            for(int k=0;k<dirX.length;k++){
-​
-                int nsx = sx + dirX[k];
-                int nsy = sy + dirY[k];
-                int len = 1;
+                    dist[nsx][nsy] = len + dist[sx][sy];
+                    queue.add(new int[]{nsx,nsy});
+                }
                 
-​
-                while(isInBounds(nsx,nsy,maze) && maze[nsx][nsy] != 1){
-                    nsx += dirX[k]; 
-                    nsy += dirY[k];
-                    len++;
-                }
-​
-                nsx -= dirX[k];
-                nsy -= dirY[k];
-                len--;
-​
-                if( len + diff < dist[nsx][nsy]){
-​
-                    dist[nsx][nsy] = len+ diff;
-                    queue.add(new int[]{nsx,nsy,dist[nsx][nsy]});
-                }
-​
             }
-        
+​
         }
 ​
     }
     
-    void bfs(int[][] maze, int x, int y, int dx, int dy, int[][] dist){
+    void dfs(int[][] maze, int sx, int sy, int dx, int dy, int[][] dist, int len){
         
-        Queue<int[]> queue = new LinkedList<>();
+        if(!isInBounds(sx,sy,maze) || maze[sx][sy] == -1) 
+            return;
+        
+        if(sx == dx && sy == dy)
+            return;
+        
+        for(int k=0;k< dirX.length;k++ ){
+            
+            int nsx = sx + dirX[k];
+            int nsy = sy + dirY[k]; 
+            
+            // once you start in a direction....continue till you hit a wall
+            
+            len = dist[sx][sy] ;
+            while(isInBounds(nsx,nsy,maze) && maze[nsx][nsy] != 1){
+                nsx += dirX[k]; 
+                nsy += dirY[k];
+                len++;
+            }
+            
+            // we need to come one step back once we hit a wall
+            nsx -= dirX[k];
+            nsy -= dirY[k];
+            
+            if(dist[nsx][nsy] == 0 || len < dist[nsx][nsy]){
+                dist[nsx][nsy] = len;
+                dfs(maze,nsx,nsy,dx,dy,dist,len);
+            }
+            
+        }
+        
+    }
     
-        queue.add(new int[]{x,y});
+    boolean isInBounds(int sx, int sy,int[][] maze){
         
-        while(!queue.isEmpty()){
+        if( sx < 0 || sy <0 || sx >= maze.length || sy >= maze[0].length)
+            return false;
+        else
+            return true;
+        
+    }
+    
+    int heuristic(int x, int y, int x1, int y1 ){
+        
+        return (int) Math.sqrt( (x-x1) * (x-x1) + (y-y1)* (y-y1) );
+    }
+}
