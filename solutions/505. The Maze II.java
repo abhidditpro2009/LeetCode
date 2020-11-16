@@ -1,60 +1,47 @@
+        
 ​
-                    dist[nsx][nsy] = len + dist[sx][sy];
-                    queue.add(new int[]{nsx,nsy});
-                }
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                dist[i][j] = Integer.MAX_VALUE;
+                pathStr[i][j] = "";
+            }
+        }
+        
+        dist[start[0]][start[1]] = 1;
+        
+        
+        ALGO algo = ALGO.DFS; 
+        
+        switch(algo){
+            
+            case DFS:
+                dfs(maze,start[0], start[1], destination[0], destination[1],dist,len+1);
+                System.out.println("List of directions taken:"+list);
+                return dist[destination[0]][destination[1]] == res ? -1 : dist[destination[0]][destination[1]]-1;
+            
+            case BFS:
+                bfs(maze,start[0], start[1], destination[0], destination[1],dist);
+                System.out.println("List of directions taken:"+list);
+                return dist[destination[0]][destination[1]] == res ? -1 : dist[destination[0]][destination[1]]-1;
+            
+            case A_STAR:
+                res =  dijikstra(maze,start[0], start[1], destination[0], destination[1],dist,true) -1;
+                System.out.println("List of directions taken:"+list);
+                return res;
                 
-            }
-​
-        }
-​
-    }
-    
-    void dfs(int[][] maze, int sx, int sy, int dx, int dy, int[][] dist, int len){
+            case DIJIKSTRA:
+                res =  dijikstra(maze,start[0], start[1], destination[0], destination[1],dist,false) - 1;
+                System.out.println("List of directions taken:"+list);
+                return res;
         
-        if(!isInBounds(sx,sy,maze) || maze[sx][sy] == -1) 
-            return;
-        
-        if(sx == dx && sy == dy)
-            return;
-        
-        for(int k=0;k< dirX.length;k++ ){
-            
-            int nsx = sx + dirX[k];
-            int nsy = sy + dirY[k]; 
-            
-            // once you start in a direction....continue till you hit a wall
-            
-            len = dist[sx][sy] ;
-            while(isInBounds(nsx,nsy,maze) && maze[nsx][nsy] != 1){
-                nsx += dirX[k]; 
-                nsy += dirY[k];
-                len++;
-            }
-            
-            // we need to come one step back once we hit a wall
-            nsx -= dirX[k];
-            nsy -= dirY[k];
-            
-            if(dist[nsx][nsy] == 0 || len < dist[nsx][nsy]){
-                dist[nsx][nsy] = len;
-                dfs(maze,nsx,nsy,dx,dy,dist,len);
-            }
-            
+            default:
+                dfs(maze,start[0], start[1], destination[0], destination[1],dist,len+1);
+                return dist[destination[0]][destination[1]] == res ? -1 : dist[destination[0]][destination[1]]-1;
         }
         
-    }
-    
-    boolean isInBounds(int sx, int sy,int[][] maze){
-        
-        if( sx < 0 || sy <0 || sx >= maze.length || sy >= maze[0].length)
-            return false;
-        else
-            return true;
         
     }
     
-    int heuristic(int x, int y, int x1, int y1 ){
-        
-        return (int) Math.sqrt( (x-x1) * (x-x1) + (y-y1)* (y-y1) );
-    }
-}
+    // BFS and DFS need to use a distance matrix
+    // Dijikstra and A star dont need to use a distance matrix necessarily
+    
