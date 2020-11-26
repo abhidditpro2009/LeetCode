@@ -2,6 +2,7 @@
 
 | # | Title | Solution | Runtime |
 |---| ----- | -------- | ------- |
+|108|[ Convert Sorted Array to Binary Search Tree](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/)|[Java](./solutions/108.%20Convert%20Sorted%20Array%20to%20Binary%20Search%20Tree.java)|0 ms|
 |490|[ The Maze](https://leetcode.com/problems/the-maze/)|[Java](./solutions/490.%20The%20Maze.java)|4 ms|
 |505|[ The Maze II](https://leetcode.com/problems/the-maze-ii/)|[Java](./solutions/505.%20The%20Maze%20II.java)|748 ms|
 |752|[ Open the Lock](https://leetcode.com/problems/open-the-lock/)|[Java](./solutions/752.%20Open%20the%20Lock.java)|15 ms|
